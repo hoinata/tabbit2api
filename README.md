@@ -24,8 +24,8 @@
 
 ```bash
 # 1. 克隆项目
-git clone <repository-url>
-cd tabb2-main
+git clone https://github.com/hoinata/tabbit2api.git
+cd tabbit2api
 
 # 2. 复制环境变量配置（可选）
 cp .env.example .env
