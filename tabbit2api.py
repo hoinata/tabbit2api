@@ -41,13 +41,15 @@ async def lifespan(app: FastAPI):
         cfg.get("server", "port", default=8800),
     )
     
+    _base_url = cfg.get("tabbit", "base_url", default="https://web.tabbit.com")
+
     # 启动时立即更新模型列表
     try:
         tokens = cfg.get("tokens", default=[])
         if tokens:
             token_str = tokens[0].get("value", "")
             if token_str:
-                new_models = await fetch_model_map(token_str)
+                new_models = await fetch_model_map(token_str, _base_url)
                 if new_models:
                     tabbit_client.MODEL_MAP.clear()
                     tabbit_client.MODEL_MAP.update(new_models)
@@ -63,7 +65,7 @@ async def lifespan(app: FastAPI):
                 if tokens:
                     token_str = tokens[0].get("value", "")
                     if token_str:
-                        new_models = await fetch_model_map(token_str)
+                        new_models = await fetch_model_map(token_str, _base_url)
                         if new_models:
                             tabbit_client.MODEL_MAP.clear()
                             tabbit_client.MODEL_MAP.update(new_models)

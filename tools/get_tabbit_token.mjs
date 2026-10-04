@@ -60,6 +60,9 @@ for (const lock of ['SingletonLock', 'SingletonCookie', 'SingletonSocket']) {
 const ctx = await chromium.launchPersistentContext(profileCopy, {
   executablePath: appPath,
   headless: true,
+  // 关键：默认参数里的 --use-mock-keychain 会让 Chromium 用假钥匙串，
+  // 读不出用真实 "<App> Safe Storage" 加密的 Cookie（整库被丢弃）。必须移除。
+  ignoreDefaultArgs: ['--use-mock-keychain'],
   args: ['--no-first-run', '--no-default-browser-check'],
 });
 

@@ -11,6 +11,9 @@ import asyncio
 from typing import AsyncGenerator, Optional
 
 import httpx
+import logging
+
+logger = logging.getLogger("tabbit2openai")
 
 MODEL_MAP = {
     "best": "最佳",
@@ -36,17 +39,16 @@ MODEL_MAP = {
 }
 
 
-async def fetch_model_map(token_str: str) -> dict:
+async def fetch_model_map(token_str: str, base_url: str | None = None) -> dict:
     import logging
     logger = logging.getLogger("tabbit2openai")
-    client = TabbitClient(token_str)
+    client = TabbitClient(token_str, base_url=base_url)
     try:
         # 直接访问模型配置接口，无需创建会话
         url = f"{client.base_url}/proxy/v1/model_config/models"
         logger.info(f"Fetching models from: {url}")
         resp = await client.client.get(
             url,
-            params={"a": "0", "scene": "generate_image"},
             headers=client._get_headers("/proxy/v1/model_config/models"),
             cookies=client._get_cookies(),
         )
@@ -95,7 +97,7 @@ class TabbitClient:
         
         self.client = httpx.AsyncClient(
             timeout=httpx.Timeout(connect=15, read=180, write=30, pool=30),
-            follow_redirects=False,
+            follow_redirects=True,
             verify=False,
             limits=httpx.Limits(
                 max_connections=10,
@@ -214,7 +216,9 @@ class TabbitClient:
             cookies=self._get_cookies(),
         )
         if rsc_resp.status_code != 200:
-            raise Exception(f"RSC init error {rsc_resp.status_code}")
+            # RSC 预热是可选的：部分部署返回 307/500，但会话仍可直接用于
+            # /api/v1/chat/completion（已实测）。仅告警，不中断。
+            logger.warning(f"RSC init returned {rsc_resp.status_code}; continuing anyway")
         
         return session_id
 

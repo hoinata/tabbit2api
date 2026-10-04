@@ -3,7 +3,7 @@
 Tabbit2API 通过 **Token 池** 调用 Tabbit 网页端，需要在管理面板里为每个 Tabbit 账号添加一个 **Access Token**。
 本文说明这个 Token 是什么、怎么取、放哪里。
 
-> 支持域名：`web.tabbit.com`（国内版）。Token 与所登录的 Tabbit 站点绑定，请确保在**同一站点**下登录并导出。
+> 支持域名：国内版 `web.tabbit.com` / 国际版 `web.tabbit.ai`（两个均为官方站点，主要差别是内置模型与数据区域）。Token 与所登录的 Tabbit 站点绑定，请确保在**同一站点**下登录并导出，并把 `base_url` 配成对应域名。
 
 ---
 
@@ -78,6 +78,7 @@ Chromium 在 macOS 上用 Keychain 中的 `Tabbit Safe Storage` 派生密钥、A
 | 返回 `请先登录`（401） | Token 无效或与当前 `base_url` 站点不匹配 —— 重新登录对应域名并导出 |
 | 返回「浏览器版本过低」(code 493) | 用的是旧接口/旧客户端协议，升级 Tabbit 客户端或改用当前接口 |
 | Token 突然失效 | JWT 过期（约 7 天），重新导出即可 |
+| 脚本读到 0 个 cookie / 明明登录了却「未找到 token」 | Playwright 默认 `--use-mock-keychain` 用假钥匙串，读不出系统真实加密的 cookie。脚本已加 `ignoreDefaultArgs: ['--use-mock-keychain']`；若仍失败，确认已在**同一台机器**的 Tabbit 里登录过目标域名 |
 | 多账号 | 每个账号单独导出一个 Token，全部加入 Token 池 |
 
 > ⚠️ Token 等同账号凭证，请勿公开分享或提交到仓库。

@@ -329,7 +329,8 @@ def init(config: ConfigManager, token_manager: TokenManager, log_store: LogStore
             from core.tabbit_client import fetch_model_map, update_model_map
             
             # Fetch models from Tabbit API
-            new_models = await fetch_model_map(token_str)
+            _burl = _cfg.get("tabbit", "base_url", default="https://web.tabbit.com")
+            new_models = await fetch_model_map(token_str, _burl)
             
             if not new_models:
                 return {"ok": False, "error": "Failed to fetch models from Tabbit API"}

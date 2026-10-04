@@ -7,7 +7,7 @@
 **Tabbit2API** 将 Tabbit 浏览器网页端内部 API 转换为 **OpenAI Chat Completions** 和 **Anthropic Claude Messages** 兼容的标准化接口，让 WorkBuddy、Trae、CodeBuddy、Cherry Studio 等 AI Agent 无缝使用 Tabbit 的模型能力。
 
 > 架构类型：Web 端反代方案（类 Pandora / ChatGPT-Next-Web）  
-> 支持域名：`web.tabbit.com`
+> 支持域名：`web.tabbit.com`（国内版）/ `web.tabbit.ai`（国际版）
 
 ## ✨ 特性
 
@@ -129,7 +129,7 @@ claude
 | 配置项 | 默认值 | 说明 |
 |--------|--------|------|
 | 服务地址 | `0.0.0.0:8800` | 监听地址与端口 |
-| Tabbit 域名 | `https://web.tabbit.com` | API 目标域名 |
+| Tabbit 域名 | `https://web.tabbit.com` | API 目标域名（国际版填 `https://web.tabbit.ai`） |
 | API Key | 空 | 全局鉴权（可选） |
 | 会话缓存 | 启用 / 604800s TTL | 可关闭或调整 |
 
